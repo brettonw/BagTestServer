@@ -76,6 +76,9 @@ public class BagTestServer extends HttpServlet {
                     Bag data = parameters.getBagArray ("data");
                     if (data == null) {
                         data = parameters.getBagObject ("data");
+                        if (data != null) {
+                            data = new BagArray ().add (data);
+                        }
                     }
                     if (data != null) {
                         responseString = data.toString ();
