@@ -1,5 +1,6 @@
 package com.brettonw;
 
+import com.brettonw.bag.BagArray;
 import com.brettonw.bag.BagObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,10 +41,12 @@ public class BagTestServer extends HttpServlet {
     private BagObject parseQuery (HttpServletRequest request) {
         BagObject query = new BagObject ();
         String queryString = request.getQueryString ();
-        String[] queryParameters = queryString.split ("&");
-        for (String queryParameter : queryParameters) {
-            String[] pair = queryParameter.split ("=");
-            query.put (pair[0], pair[1]);
+        if (queryString != null) {
+            String[] queryParameters = queryString.split ("&");
+            for (String queryParameter : queryParameters) {
+                String[] pair = queryParameter.split ("=");
+                query.put (pair[0], pair[1]);
+            }
         }
         return query;
     }
@@ -53,16 +56,30 @@ public class BagTestServer extends HttpServlet {
         response.setContentType ("application/json;charset=UTF-8");
         response.setCharacterEncoding ("UTF-8");
 
-        String responseString = "BOGUS";
-        switch (query.getString ("command", () -> "ip")) {
-            case "ip":
-                responseString = new BagObject ().put ("ip", request.getRemoteAddr ()).toString ();
-                break;
+        String command = query.getString ("command", () -> "echo");
+        String responseString = new BagObject ().put ("command", command).toString ();
+        log.info ("Command: " + command);
+        switch (command) {
             case "echo":
                 if (parameters != null) {
                     responseString = parameters.toString ();
                 } else {
                     responseString = query.toString ();
+                }
+                break;
+            case "ip":
+                responseString = new BagObject ().put ("ip", request.getRemoteAddr ()).toString ();
+                break;
+            case "data":
+                if (parameters != null) {
+                    BagArray data = parameters.getBagArray ("data");
+                    if (data != null) {
+                        responseString = data.toString ();
+                    } else {
+                        responseString = new BagArray ().add (new BagObject ().put ("error", "'data' is not a valid array")).toString ();
+                    }
+                } else {
+                    responseString = new BagArray ().add (new BagObject ().put ("error", "invalid parameters")).toString ();
                 }
                 break;
         }
