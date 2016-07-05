@@ -1,7 +1,9 @@
 package com.brettonw;
 
+import com.brettonw.bag.Bag;
 import com.brettonw.bag.BagArray;
 import com.brettonw.bag.BagObject;
+import com.brettonw.bag.BagObjectFrom;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,9 +33,8 @@ public class BagTestServer extends HttpServlet {
     protected void doPost (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         BagObject query = parseQuery (request);
 
-        // extract the parameters
-        // XXX this will change as soon as I can do a new release of Bag, which is why I'm writing this...
-        BagObject parameters = new BagObject (request.getInputStream ());
+        // extract the parameters, they must be a bag object
+        BagObject parameters = BagObjectFrom.inputStream (request.getInputStream ());
 
         doRequest (query, parameters, request, response);
     }
@@ -72,11 +73,14 @@ public class BagTestServer extends HttpServlet {
                 break;
             case "data":
                 if (parameters != null) {
-                    BagArray data = parameters.getBagArray ("data");
+                    Bag data = parameters.getBagArray ("data");
+                    if (data == null) {
+                        data = parameters.getBagObject ("data");
+                    }
                     if (data != null) {
                         responseString = data.toString ();
                     } else {
-                        responseString = new BagArray ().add (new BagObject ().put ("error", "'data' is not a valid array")).toString ();
+                        responseString = new BagArray ().add (new BagObject ().put ("error", "'data' is not a valid object or array")).toString ();
                     }
                 } else {
                     responseString = new BagArray ().add (new BagObject ().put ("error", "invalid parameters")).toString ();
