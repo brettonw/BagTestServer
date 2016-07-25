@@ -3,97 +3,49 @@ package com.brettonw;
 import com.brettonw.bag.Bag;
 import com.brettonw.bag.BagArray;
 import com.brettonw.bag.BagObject;
-import com.brettonw.bag.BagObjectFrom;
+import com.brettonw.servlet.ServletBase;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
-public class BagTestServer extends HttpServlet {
+public class BagTestServer extends ServletBase {
     private static final Logger log = LogManager.getLogger (BagTestServer.class);
 
-    @Override
-    public void init (ServletConfig config) throws ServletException {
-        super.init (config);
-    }
+    public static final String ECHO_KEY = "echo";
+    public static final String IP_KEY = "ip";
 
-    @Override
-    protected void doGet (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        BagObject query = parseQuery (request);
-        doRequest (query, null, request, response);
-    }
-
-    @Override
-    protected void doPost (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        BagObject query = parseQuery (request);
-
-        // extract the parameters, they must be a bag object
-        BagObject parameters = BagObjectFrom.inputStream (request.getInputStream ());
-
-        doRequest (query, parameters, request, response);
-    }
-
-    private BagObject parseQuery (HttpServletRequest request) {
-        BagObject query = new BagObject ();
-        String queryString = request.getQueryString ();
-        if (queryString != null) {
-            String[] queryParameters = queryString.split ("&");
-            for (String queryParameter : queryParameters) {
-                String[] pair = queryParameter.split ("=");
-                query.put (pair[0], pair[1]);
-            }
-        }
-        return query;
-    }
-
-    private void doRequest (BagObject query, BagObject parameters, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // set the response to be JSON
-        response.setContentType ("application/json;charset=UTF-8");
-        response.setCharacterEncoding ("UTF-8");
-
-        String command = query.getString ("command", () -> "echo");
-        String responseString = new BagObject ().put ("command", command).toString ();
-        log.info ("Command: " + command);
+    public void handleCommand (String command, BagObject query, HttpServletRequest request, HttpServletResponse response) throws IOException {
         switch (command) {
-            case "echo":
-                if (parameters != null) {
-                    responseString = parameters.toString ();
-                } else {
-                    responseString = query.toString ();
-                }
+            case ECHO_KEY:
+                makeJsonResponse (response, query);
                 break;
-            case "ip":
-                responseString = new BagObject ().put ("ip", request.getRemoteAddr ()).toString ();
+            case IP_KEY:
+                makeJsonResponse (response, new BagObject ().put (IP_KEY, request.getRemoteAddr ().toString ()));
                 break;
-            case "data":
-                if (parameters != null) {
-                    Bag data = parameters.getBagArray ("data");
-                    if (data == null) {
-                        data = parameters.getBagObject ("data");
-                        if (data != null) {
-                            data = new BagArray ().add (data);
+            case POST_DATA_KEY:
+                if (query.has (POST_DATA_KEY)) {
+                    // get the post data
+                    Bag postData = query.getBagArray (POST_DATA_KEY);
+                    if (postData == null) {
+                        postData = query.getBagObject (POST_DATA_KEY);
+                        if (postData != null) {
+                            postData = new BagArray ().add (postData);
                         }
                     }
-                    if (data != null) {
-                        responseString = data.toString ();
+
+                    // if we got post data...
+                    if (postData != null) {
+                        makeJsonResponse (response, postData);
                     } else {
-                        responseString = new BagArray ().add (new BagObject ().put ("error", "'data' is not a valid object or array")).toString ();
+                        makeErrorResponse (query, response, "Invalid post data");
                     }
                 } else {
-                    responseString = new BagArray ().add (new BagObject ().put ("error", "invalid parameters")).toString ();
+                    makeErrorResponse (query, response, "No post data");
                 }
                 break;
         }
-
-        PrintWriter out = response.getWriter ();
-        out.println (responseString);
-        //out.flush ();
-        out.close ();
     }
 }
