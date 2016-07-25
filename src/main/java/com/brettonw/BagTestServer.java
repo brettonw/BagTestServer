@@ -46,6 +46,8 @@ public class BagTestServer extends ServletBase {
                     makeErrorResponse (query, response, "No post data");
                 }
                 break;
+            default:
+                makeErrorResponse (query, response, "Unknown command");
         }
     }
 }
