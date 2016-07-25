@@ -1,7 +1,6 @@
 package com.brettonw;
 
 import com.brettonw.bag.Bag;
-import com.brettonw.bag.BagArray;
 import com.brettonw.bag.BagObject;
 import com.brettonw.servlet.ServletBase;
 import org.apache.logging.log4j.LogManager;
@@ -31,9 +30,6 @@ public class BagTestServer extends ServletBase {
                     Bag postData = query.getBagArray (POST_DATA_KEY);
                     if (postData == null) {
                         postData = query.getBagObject (POST_DATA_KEY);
-                        if (postData != null) {
-                            postData = new BagArray ().add (postData);
-                        }
                     }
 
                     // if we got post data...
