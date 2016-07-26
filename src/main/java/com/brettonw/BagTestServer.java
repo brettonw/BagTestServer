@@ -26,14 +26,13 @@ public class BagTestServer extends ServletBase {
             case IP_KEY: {
                 String ip = request.getRemoteAddr ();
                 if (ip.startsWith ("127") || ip.startsWith ("0")) {
-                    // try to get the x-forwarded header
+                    // try to get the x-forwarded header, the last one...
                     String forwarding = request.getHeader ("x-forwarded-for");
                     if (forwarding != null) {
                         String[] forwards = forwarding.split (",");
                         for (String forward : forwards) {
                             forward = forward.trim ();
-                            String parts = forward.split (":")[0];
-                            ip = parts;
+                            ip = forward.split (":")[0];
                         }
                     }
                 }
