@@ -22,7 +22,7 @@ public class BagTestServer extends ServletBase {
                 makeJsonResponse (response, query);
                 break;
             case IP_KEY:
-                makeJsonResponse (response, new BagObject ().put (IP_KEY, request.getRemoteAddr ().toString ()));
+                makeSuccessResponse (query, response, new BagObject ().put (IP_KEY, request.getRemoteAddr ()));
                 break;
             case POST_DATA_KEY:
                 if (query.has (POST_DATA_KEY)) {
