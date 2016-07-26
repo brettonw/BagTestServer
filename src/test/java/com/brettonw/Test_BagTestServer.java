@@ -20,7 +20,6 @@ public class Test_BagTestServer extends BagTestServer {
         servletTester = new ServletTester (this);
     }
 
-
     @Test
     public void testGetIP () throws IOException {
         BagObject query = new BagObject ().put (COMMAND_KEY, IP_KEY);

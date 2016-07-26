@@ -70,6 +70,7 @@ public class BagTestServer extends ServletBase {
             }
             default:
                 makeErrorResponse (query, response, "Unknown command");
+                break;
         }
     }
 }
