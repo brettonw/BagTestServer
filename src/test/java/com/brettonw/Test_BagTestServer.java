@@ -63,6 +63,13 @@ public class Test_BagTestServer extends BagTestServer {
     }
 
     @Test
+    public void testGetHeaders () throws IOException {
+        BagObject query = new BagObject ().put (COMMAND_KEY, HEADERS_KEY);
+        BagObject response = servletTester.bagObjectFromGet (query);
+        assertTrue (response.getString (STATUS_KEY).equals (OK_KEY));
+    }
+
+    @Test
     public void testEmptyGet () throws IOException {
         BagObject response = servletTester.bagObjectFromGet ("");
         assertTrue (response.getString (STATUS_KEY).equals (ERROR_KEY));

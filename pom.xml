@@ -33,11 +33,17 @@
             <version>RELEASE</version>
             <scope>test</scope>
         </dependency>
+        <!--
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-web</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+        -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>RELEASE</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

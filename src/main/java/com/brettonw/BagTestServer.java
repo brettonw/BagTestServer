@@ -9,21 +9,37 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Enumeration;
 
 public class BagTestServer extends ServletBase {
     private static final Logger log = LogManager.getLogger (BagTestServer.class);
 
     public static final String ECHO_KEY = "echo";
     public static final String IP_KEY = "ip";
+    public static final String HEADERS_KEY = "headers";
 
     public void handleCommand (String command, BagObject query, HttpServletRequest request, HttpServletResponse response) throws IOException {
         switch (command) {
             case ECHO_KEY:
                 makeJsonResponse (response, query);
                 break;
-            case IP_KEY:
-                makeSuccessResponse (query, response, new BagObject ().put (IP_KEY, request.getRemoteAddr ()));
+            case IP_KEY: {
+                String ip = request.getRemoteAddr ();
+                if (ip.startsWith ("127") || ip.startsWith ("0")) {
+                    // try to get the x-forwarded header
+                    String forwarding = request.getHeader ("x-forwarded-for");
+                    if (forwarding != null) {
+                        String[] forwards = forwarding.split (",");
+                        for (String forward : forwards) {
+                            forward = forward.trim ();
+                            String parts = forward.split (":")[0];
+                            ip = parts;
+                        }
+                    }
+                }
+                makeSuccessResponse (query, response, new BagObject ().put (IP_KEY, ip));
                 break;
+            }
             case POST_DATA_KEY:
                 if (query.has (POST_DATA_KEY)) {
                     // get the post data
@@ -42,6 +58,17 @@ public class BagTestServer extends ServletBase {
                     makeErrorResponse (query, response, "No post data");
                 }
                 break;
+            case HEADERS_KEY: {
+                BagObject responseBagObject = new BagObject ();
+                Enumeration headerNames = request.getHeaderNames ();
+                while (headerNames.hasMoreElements ()) {
+                    String headerName = (String) headerNames.nextElement ();
+                    String headerValue = request.getHeader (headerName);
+                    responseBagObject.put (headerName, headerValue);
+                }
+                makeSuccessResponse (query, response, responseBagObject);
+                break;
+            }
             default:
                 makeErrorResponse (query, response, "Unknown command");
         }
