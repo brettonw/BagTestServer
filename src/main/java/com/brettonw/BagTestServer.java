@@ -18,8 +18,9 @@ public class BagTestServer extends ServletBase {
     public static final String IP_KEY = "ip";
     public static final String HEADERS_KEY = "headers";
 
-    public void handleCommand (String command, BagObject query, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        switch (command) {
+    public void handleCommand (BagObject query, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        log.info ("Command: " + query.getString (COMMAND_KEY));
+        switch (query.getString (COMMAND_KEY)) {
             case ECHO_KEY:
                 makeJsonResponse (response, query);
                 break;

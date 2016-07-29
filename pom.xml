@@ -13,7 +13,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <log4j.version>RELEASE</log4j.version>
     </properties>
 
     <dependencies>
