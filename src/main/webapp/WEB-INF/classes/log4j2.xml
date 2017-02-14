@@ -6,8 +6,7 @@
         </Console>
     </Appenders>
     <Loggers>
-        <Logger name="com.brettonw" level="debug"/>
-        <Logger name="com.brettonw.servlet" level="info"/>
+        <Logger name="com.brettonw" level="info"/>
         <Root level="warn">
             <AppenderRef ref="Console" />
         </Root>
