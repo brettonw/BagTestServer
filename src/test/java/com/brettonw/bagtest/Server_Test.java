@@ -1,4 +1,4 @@
-package com.brettonw;
+package com.brettonw.bagtest;
 
 import com.brettonw.bag.BagObject;
 import com.brettonw.bag.BagObjectFrom;
@@ -9,53 +9,57 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static com.brettonw.bagtest.Keys.ECHO;
+import static com.brettonw.bagtest.Keys.HEADERS;
+import static com.brettonw.bagtest.Keys.IP;
+import static com.brettonw.servlet.Keys.*;
 import static org.junit.Assert.assertTrue;
 
-public class Test_BagTestServer extends BagTestServer {
-    private static final Logger log = LogManager.getLogger (Test_BagTestServer.class);
+public class Server_Test extends Server {
+    private static final Logger log = LogManager.getLogger (Server_Test.class);
 
     ServletTester servletTester;
 
-    public Test_BagTestServer () {
+    public Server_Test () {
         servletTester = new ServletTester (this);
     }
 
     @Test
     public void testGetIP () throws IOException {
-        BagObject query = new BagObject ().put (COMMAND_KEY, IP_KEY);
+        BagObject query = new BagObject ().put (EVENT, IP);
         BagObject response = servletTester.bagObjectFromGet (query);
-        assertTrue (response.getString (STATUS_KEY).equals (OK_KEY));
-        String ip = response.getBagObject (RESPONSE_KEY).getString (IP_KEY);
+        assertTrue (response.getString (STATUS).equals (OK));
+        String ip = response.getBagObject (RESPONSE).getString (IP);
         assertTrue (ip != null);
-        log.info (IP_KEY + ": " + ip);
+        log.info (IP + ": " + ip);
     }
 
     @Test
     public void testGetEcho () throws IOException {
-        BagObject query = new BagObject ().put (COMMAND_KEY, ECHO_KEY);
+        BagObject query = new BagObject ().put (EVENT, ECHO);
         BagObject response = servletTester.bagObjectFromGet (query);
         assertTrue (response.equals (query));
     }
 
     @Test
     public void testGetPostData () throws IOException {
-        BagObject query = new BagObject ().put (COMMAND_KEY, POST_DATA_KEY);
+        BagObject query = new BagObject ().put (EVENT, POST_DATA);
         BagObject response = servletTester.bagObjectFromGet (query);
-        assertTrue (response.getString (STATUS_KEY).equals (ERROR_KEY));
+        assertTrue (response.getString (STATUS).equals (ERROR));
     }
 
     @Test
     public void testPostEcho () throws IOException {
-        BagObject query = new BagObject ().put (COMMAND_KEY, ECHO_KEY);
+        BagObject query = new BagObject ().put (EVENT, ECHO);
         BagObject postData = BagObjectFrom.resource (getClass (), "/testPost.json");
         BagObject response = servletTester.bagObjectFromPost (query, postData);
-        query.put (POST_DATA_KEY, postData);
+        query.put (POST_DATA, postData);
         assertTrue (response.equals (query));
     }
 
     @Test
     public void testPostPostData () throws IOException {
-        BagObject query = new BagObject ().put (COMMAND_KEY, POST_DATA_KEY);
+        BagObject query = new BagObject ().put (EVENT, POST_DATA);
         BagObject postData = BagObjectFrom.resource (getClass (), "/testPost.json");
         BagObject response = servletTester.bagObjectFromPost (query, postData);
         assertTrue (response.equals (postData));
@@ -63,14 +67,14 @@ public class Test_BagTestServer extends BagTestServer {
 
     @Test
     public void testGetHeaders () throws IOException {
-        BagObject query = new BagObject ().put (COMMAND_KEY, HEADERS_KEY);
+        BagObject query = new BagObject ().put (EVENT, HEADERS);
         BagObject response = servletTester.bagObjectFromGet (query);
-        assertTrue (response.getString (STATUS_KEY).equals (OK_KEY));
+        assertTrue (response.getString (STATUS).equals (OK));
     }
 
     @Test
     public void testEmptyGet () throws IOException {
         BagObject response = servletTester.bagObjectFromGet ("");
-        assertTrue (response.getString (STATUS_KEY).equals (ERROR_KEY));
+        assertTrue (response.getString (STATUS).equals (ERROR));
     }
 }
