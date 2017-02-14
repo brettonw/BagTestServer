@@ -1,13 +1,14 @@
 {
-  "version": { "description": "Return the build version for the current WAR." },
-  "help": { "description": "Get the API description." },
-  "echo": { "description": "Repeat the contents of the query." },
-  "ip": { "description": "Return the IP address of the requestor." },
-  "post-data": {
-    "required": [ "post-data" ],
-    "description": "Repeat the contents of the post data."
-  },
-  "headers": {
-    "description": "Return the request headers as a JSON object."
-  }
+    "version": {"description": "Return the build version for the current WAR."},
+    "help": {"description": "Get the API description."},
+    "ok": {"decsription": "Ok."},
+    "echo": {"description": "Repeat the contents of the query."},
+    "ip": {"description": "Return the IP address of the requestor."},
+    "post-data": {
+        "required": ["post-data"],
+        "description": "Repeat the contents of the post data."
+    },
+    "headers": {
+        "description": "Return the request headers as a JSON object."
+    }
 }

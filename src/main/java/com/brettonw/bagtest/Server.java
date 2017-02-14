@@ -9,16 +9,21 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 
+import static com.brettonw.bagtest.Keys.ECHO;
 import static com.brettonw.bagtest.Keys.HEADERS;
+import static com.brettonw.bagtest.Keys.IP;
+import static com.brettonw.servlet.Keys.OK;
 import static com.brettonw.servlet.Keys.POST_DATA;
 
 public class Server extends Base {
     private static final Logger log = LogManager.getLogger (Server.class);
 
     public Server () {
-        onEvent (Keys.ECHO, event -> event.respondJson (event.getQuery ()));
+        onEvent (OK, event -> event.ok ());
 
-        onEvent (Keys.IP, event -> {
+        onEvent (ECHO, event -> event.respondJson (event.getQuery ()));
+
+        onEvent (IP, event -> {
             HttpServletRequest request = event.getRequest ();
             String ip = request.getRemoteAddr ();
             if (ip.startsWith ("127") || ip.startsWith ("0")) {
@@ -32,7 +37,7 @@ public class Server extends Base {
                     }
                 }
             }
-            event.ok (BagObject.open (Keys.IP, ip));
+            event.ok (BagObject.open (IP, ip));
         });
 
         onEvent (POST_DATA, event -> {

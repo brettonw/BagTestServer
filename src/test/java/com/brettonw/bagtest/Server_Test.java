@@ -24,7 +24,7 @@ public class Server_Test extends Server {
 
     @Test
     public void testGetIP () throws IOException {
-        BagObject query = new BagObject ().put (EVENT, IP);
+        BagObject query = BagObject.open (EVENT, IP);
         BagObject response = servletTester.bagObjectFromGet (query);
         assertTrue (response.getString (STATUS).equals (OK));
         String ip = response.getBagObject (RESPONSE).getString (IP);
@@ -33,22 +33,29 @@ public class Server_Test extends Server {
     }
 
     @Test
+    public void testGetOk () throws IOException {
+        BagObject query = BagObject.open (EVENT, OK);
+        BagObject response = servletTester.bagObjectFromGet (query);
+        assertTrue (response.getString (STATUS).equals (OK));
+    }
+
+    @Test
     public void testGetEcho () throws IOException {
-        BagObject query = new BagObject ().put (EVENT, ECHO);
+        BagObject query = BagObject.open (EVENT, ECHO);
         BagObject response = servletTester.bagObjectFromGet (query);
         assertTrue (response.equals (query));
     }
 
     @Test
     public void testGetPostData () throws IOException {
-        BagObject query = new BagObject ().put (EVENT, POST_DATA);
+        BagObject query = BagObject.open (EVENT, POST_DATA);
         BagObject response = servletTester.bagObjectFromGet (query);
         assertTrue (response.getString (STATUS).equals (ERROR));
     }
 
     @Test
     public void testPostEcho () throws IOException {
-        BagObject query = new BagObject ().put (EVENT, ECHO);
+        BagObject query = BagObject.open (EVENT, ECHO);
         BagObject postData = BagObjectFrom.resource (getClass (), "/testPost.json");
         BagObject response = servletTester.bagObjectFromPost (query, postData);
         query.put (POST_DATA, postData);
@@ -57,7 +64,7 @@ public class Server_Test extends Server {
 
     @Test
     public void testPostPostData () throws IOException {
-        BagObject query = new BagObject ().put (EVENT, POST_DATA);
+        BagObject query = BagObject.open (EVENT, POST_DATA);
         BagObject postData = BagObjectFrom.resource (getClass (), "/testPost.json");
         BagObject response = servletTester.bagObjectFromPost (query, postData);
         assertTrue (response.equals (postData));
@@ -65,7 +72,7 @@ public class Server_Test extends Server {
 
     @Test
     public void testGetHeaders () throws IOException {
-        BagObject query = new BagObject ().put (EVENT, HEADERS);
+        BagObject query = BagObject.open (EVENT, HEADERS);
         BagObject response = servletTester.bagObjectFromGet (query);
         assertTrue (response.getString (STATUS).equals (OK));
     }
