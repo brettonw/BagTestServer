@@ -9,9 +9,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static com.brettonw.bagtest.Keys.ECHO;
-import static com.brettonw.bagtest.Keys.HEADERS;
-import static com.brettonw.bagtest.Keys.IP;
+import static com.brettonw.bagtest.Keys.*;
 import static com.brettonw.servlet.Keys.*;
 import static org.junit.Assert.assertTrue;
 
