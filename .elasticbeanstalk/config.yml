@@ -1,0 +1,21 @@
+branch-defaults:
+  master:
+    environment: bagtestserver-env
+environment-defaults:
+  bagtestserver-env:
+    branch: null
+    repository: null
+global:
+  application_name: BagTestServer
+  default_ec2_keyname: null
+  default_platform: arn:aws:elasticbeanstalk:us-east-1::platform/Tomcat 8 with Java
+    8 running on 64bit Amazon Linux/2.5.3
+  default_region: us-east-1
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: bretton.wade@gmail.com
+  sc: git
+  workspace_type: Application
+deploy:
+  artifact: target/bag-test-server.war
