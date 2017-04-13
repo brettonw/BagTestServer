@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>bag-test-server</artifactId>
-    <version>4.0.3</version>
+    <version>4.0.4</version>
     <packaging>war</packaging>
 
     <name>Bag Test Server</name>
