@@ -9,13 +9,15 @@
 <style>
     * { box-sizing:border-box;margin:0px; padding:0px; border-width:0px;  }
     body { background-color:white; width:100%; max-width:800px; margin: 0 auto !important; float: none !important; }
+    h1 { margin:10px 0px; }
     h2 { margin:10px 0px; }
     .content-center { margin-left:auto; margin-right:auto; }
+    .container-div { border-radius:6px; border-width:1px; border-color:#ddd; border-style:solid; background:#fdfdfd; padding:5px 20px; }
     .description-div { margin-left:15px; }
     .events-div { margin-left:15px; }
     .event-div { vertical-align:top; border-radius:4px; border-width:1px; border-color:#ddd; border-style:solid; background:#fafafa; margin-bottom:6px; padding:8px 12px 10px 12px; }
-    .event-name { font-weight:bold; font-size:18px; margin-bottom:6px;}
-    .try-it { font-size:12px; font-weight:normal; text-decoration:none; }
+    .event-name { font-weight:bold; font-size:18px; margin-bottom:6px; line-height:18px; vertical-align:top; }
+    .try-it { font-size:12px; font-weight:normal; text-decoration:none; float:right; line-height:12px; vertical-align:top; }
     .event-description { font-size:14px; margin-bottom:10px; }
     .parameter-div { vertical-align:top; border-radius:4px; width:95%; font-size:12px; margin-left:15px; margin-right:10px; padding:4px 6px; }
     .parameter-name { width:25%; font-family:monospace; font-style:italic; display:inline-block; }
@@ -33,7 +35,6 @@
 
 <script>
     // Helper functions for emitting HTML from Javascript
-
     let valid = function (value) {
         return (typeof (value) != "undefined") && (value !== null);
     };
@@ -69,11 +70,6 @@
             let db = JSON.parse (this.responseText).response;
             let innerHTML = "";
 
-            if ("name" in db) {
-                document.title = db.name;
-                innerHTML += block ("h1", {}, db.name);
-            }
-
             if ("description" in db) {
                 innerHTML += block ("h2", {}, "Description") + div ("description-div", db.description);
             }
@@ -95,7 +91,8 @@
                         for (let exampleKey of exampleKeys) {
                             url += "&" + exampleKey + "=" + example[exampleKey];
                         }
-                        eventHTML = a ("try-it", url, " (" + url.replace (/&/g, "&amp;") + ")");
+                        //eventHTML = a ("try-it", url, " (" + url.replace (/&/g, "&amp;") + ")");
+                        eventHTML = a ("try-it", url, "[example]");
                     }
                     eventHTML = div ("event-name", eventName + eventHTML);
 
@@ -128,6 +125,11 @@
                     eventsHTML += div ("event-div", eventHTML);
                 }
                 innerHTML += div("events-div", eventsHTML);
+            }
+
+            if ("name" in db) {
+                document.title = db.name;
+                innerHTML = block ("h1", {}, db.name) + div("container-div", innerHTML);
             }
 
             document.getElementById("help").innerHTML = innerHTML;
