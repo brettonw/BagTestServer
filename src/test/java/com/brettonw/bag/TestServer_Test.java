@@ -1,7 +1,5 @@
-package com.brettonw.bagtest;
+package com.brettonw.bag;
 
-import com.brettonw.bag.BagObject;
-import com.brettonw.bag.BagObjectFrom;
 import com.brettonw.servlet.ServletTester;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,16 +7,15 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static com.brettonw.bagtest.Keys.*;
-import static com.brettonw.servlet.Keys.*;
+import static com.brettonw.bag.service.Keys.*;
 import static org.junit.Assert.assertTrue;
 
-public class Server_Test extends Server {
-    private static final Logger log = LogManager.getLogger (Server_Test.class);
+public class TestServer_Test extends TestServer {
+    private static final Logger log = LogManager.getLogger (TestServer_Test.class);
 
     ServletTester servletTester;
 
-    public Server_Test () {
+    public TestServer_Test () {
         servletTester = new ServletTester (this);
     }
 

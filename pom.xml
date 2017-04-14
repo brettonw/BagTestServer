@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>bag-test-server</artifactId>
-    <version>4.0.4</version>
+    <version>6.0.0</version>
     <packaging>war</packaging>
 
     <name>Bag Test Server</name>
@@ -29,8 +29,8 @@
         </dependency>
         <dependency>
             <groupId>com.brettonw</groupId>
-            <artifactId>servlet-base</artifactId>
-            <version>3.4.2</version>
+            <artifactId>bag-service-base</artifactId>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>

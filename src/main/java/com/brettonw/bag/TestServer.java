@@ -1,22 +1,23 @@
-package com.brettonw.bagtest;
+package com.brettonw.bag;
 
-import com.brettonw.bag.Bag;
-import com.brettonw.bag.BagObject;
-import com.brettonw.servlet.Base;
-import com.brettonw.servlet.Event;
+import com.brettonw.bag.service.Base;
+import com.brettonw.bag.service.Event;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 
-import static com.brettonw.bagtest.Keys.IP;
-import static com.brettonw.servlet.Keys.POST_DATA;
+import static com.brettonw.bag.service.Keys.POST_DATA;
 
-public class Server extends Base {
-    private static final Logger log = LogManager.getLogger (Server.class);
+public class TestServer extends Base {
+    private static final Logger log = LogManager.getLogger (TestServer.class);
 
-    public Server () {
+    public static final String ECHO = "echo";
+    public static final String IP = "ip";
+    public static final String HEADERS = "headers";
+
+    public TestServer () {
     }
 
     public void handleEventEcho (Event event) {

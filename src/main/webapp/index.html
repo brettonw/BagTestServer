@@ -2,143 +2,16 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/png" href="img/icon.png?v=1"/>
+    <link rel="icon" type="image/png" href="http://bag-service-base.brettonw.com/img/icon.png?v=1"/>
+    <link rel="stylesheet" href="http://bag-service-base.brettonw.com/css/bag-service-base.css" />
     <title>Untitled</title>
 </head>
-
-<style>
-    * { box-sizing:border-box; margin:0px; padding:0px; border-width:0px;  }
-    body { background-color:white; font-family:sans-serif; width:100%; max-width:800px; margin: 0 auto !important; float: none !important; }
-    h1 { margin:10px 0px; }
-    h2 { margin:10px 0px; }
-    .content-center { margin-left:auto; margin-right:auto; }
-    .container-div { border-radius:6px; border-width:1px; border-color:#ddd; border-style:solid; background:#fdfdfd; padding:5px 20px; }
-    .description-div { margin-left:15px; }
-    .events-div { margin-left:15px; }
-    .event-div { vertical-align:top; border-radius:4px; border-width:1px; border-color:#ddd; border-style:solid; background:#fafafa; margin-bottom:6px; padding:8px 12px 10px 12px; }
-    .event-name { font-weight:bold; font-size:18px; margin-bottom:6px; line-height:18px; vertical-align:top; }
-    .try-it { font-size:12px; font-weight:normal; text-decoration:none; float:right; line-height:12px; vertical-align:top; }
-    .event-description { font-size:14px; margin-bottom:10px; }
-    .parameter-div { border-radius:4px; width:95%; font-size:12px; margin-left:15px; margin-right:10px; padding:4px 6px; }
-    .parameter-name { vertical-align:middle; width:22%; font-family:monospace; font-style:italic; display:inline-block; }
-    .parameter-description { vertical-align:middle; width:62%; display:inline-block; margin-left:5px; }
-    .parameter-required { vertical-align:middle; width:12%; display:inline-block; margin-left:5px; }
-    .odd { background:#eaeaea; }
-    .footer { width:50%; color:#aaa; font-size:10px; text-align:center; margin-top:3px; }
-    .footer-link { color:#888; font-size:10px; text-decoration:none; }
-</style>
-
-<body style="font-family:sans-serif;">
-
-<div id="help"></div>
-<div class="content-center footer">Built with <a class="footer-link" href="https://github.com/brettonw/ServletBase">brettonw/ServletBase</a></div>
-
+<body>
+<div id="servlet-base"></div>
 </body>
 </html>
 
+<script src="http://bag-service-base.brettonw.com/js/bag-service-base.js"></script>
 <script>
-    // Helper functions for emitting HTML from Javascript
-    let valid = function (value) {
-        return (typeof (value) != "undefined") && (value !== null);
-    };
-
-    let block = function (block, attributes, content) {
-        let result = "<" + block;
-        if (valid (attributes)) {
-            let attributeNames = Object.keys (attributes);
-            for (let attributeName of attributeNames) {
-                if (valid (attributes[attributeName])) {
-                    result += " " + attributeName + "=\"" + attributes[attributeName] + "\"";
-                }
-            }
-        }
-        return result + (valid (content) ? (">" + content + "</" + block + ">") : ("/>"));
-    };
-
-    let div = function (cssClass, content) {
-        return block ("div", { "class": cssClass }, content);
-    };
-
-    let a = function (cssClass, href, content) {
-        return block ("a", { "class": cssClass, "href": href, "target": "_top" }, content);
-    };
-
-    // a little black raincloud, of course
-    let main = function () {
-        let request = new XMLHttpRequest ();
-        request.open ("GET", "api?event=help", true);
-        request.overrideMimeType ("application/json");
-        request.onload = function () {
-            // parse the data
-            let db = JSON.parse (this.responseText).response;
-            let innerHTML = "";
-
-            if ("description" in db) {
-                innerHTML += block ("h2", {}, "Description") + div ("description-div", db.description);
-            }
-
-            if ("events" in db) {
-                innerHTML += block ("h2", {}, "Events");
-                let events = db.events;
-                let eventNames = Object.keys (events).sort ();
-                let eventsHTML = "";
-                for (let eventName of eventNames) {
-                    let event = events[eventName];
-                    let eventHTML = "";
-
-                    // if there is an example
-                    if ("example" in event) {
-                        let url = "api?event=" + eventName;
-                        let example = event.example;
-                        let exampleKeys = Object.keys (example).sort ();
-                        for (let exampleKey of exampleKeys) {
-                            url += "&" + exampleKey + "=" + example[exampleKey];
-                        }
-                        //eventHTML = a ("try-it", url, " (" + url.replace (/&/g, "&amp;") + ")");
-                        eventHTML = a ("try-it", url, "[example]");
-                    }
-                    eventHTML = div ("event-name", eventName + eventHTML);
-
-                    // if there is a description
-                    if ("description" in event) {
-                        eventHTML += div ("event-description", event.description);
-                    }
-
-                    let odd = true;
-                    if ("parameters" in event) {
-                        let parameterNames = Object.keys (event.parameters);
-                        for (let parameterName of parameterNames) {
-                            let parameter = event.parameters[parameterName];
-                            let required = ("required" in parameter) ? parameter.required : false;
-                            eventHTML += div ("parameter-div" + (odd ? " odd" : ""),
-                                div ("parameter-name", parameterName) +
-                                div ("parameter-required", required ? "REQUIRED" : "OPTIONAL") +
-                                div ("parameter-description", parameter.description));
-                            odd = !odd;
-                        }
-                    }
-
-                    if (("strict" in event) && (event.strict == "false")) {
-                        eventHTML += div ("parameter-div" + (odd ? " odd" : ""),
-                            div ("parameter-name", "(any)") +
-                            div ("parameter-required", "OPTIONAL") +
-                            div ("parameter-description", "Event allows unspecified parameters."));
-                    }
-
-                    eventsHTML += div ("event-div", eventHTML);
-                }
-                innerHTML += div("events-div", eventsHTML);
-            }
-
-            if ("name" in db) {
-                document.title = db.name;
-                innerHTML = block ("h1", {}, db.name) + div("container-div", innerHTML);
-            }
-
-            document.getElementById("help").innerHTML = innerHTML;
-        };
-        request.send ();
-    };
-
-    main ();
+    ServletBase.display ("servlet-base");
 </script>
