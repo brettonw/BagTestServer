@@ -6,7 +6,7 @@
     <display-name>Bag Test Server</display-name>
     <servlet>
         <servlet-name>bag-test-server</servlet-name>
-        <servlet-class>com.brettonw.bagtest.Server</servlet-class>
+        <servlet-class>com.brettonw.bag.TestServer</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>bag-test-server</servlet-name>
