@@ -2,8 +2,6 @@ package com.brettonw.bag;
 
 import com.brettonw.bag.service.Base;
 import com.brettonw.bag.service.Event;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
@@ -11,11 +9,7 @@ import java.util.Enumeration;
 import static com.brettonw.bag.service.Keys.POST_DATA;
 
 public class TestServer extends Base {
-    private static final Logger log = LogManager.getLogger (TestServer.class);
-
-    public static final String ECHO = "echo";
     public static final String IP = "ip";
-    public static final String HEADERS = "headers";
 
     public TestServer () {
     }
@@ -55,21 +49,17 @@ public class TestServer extends Base {
 
     public void handleEventPostData (Event event) {
         BagObject query = event.getQuery ();
-        if (query.has (POST_DATA)) {
-            // get the post data
-            Bag postData = query.getBagArray (POST_DATA);
-            if (postData == null) {
-                postData = query.getBagObject (POST_DATA);
-            }
+        // get the post data
+        Bag postData = query.getBagArray (POST_DATA);
+        if (postData == null) {
+            postData = query.getBagObject (POST_DATA);
+        }
 
-            // if we got post data...
-            if (postData != null) {
-                event.respond (postData);
-            } else {
-                event.error ("Invalid post data");
-            }
+        // if we got valid post data...
+        if (postData != null) {
+            event.respond (postData);
         } else {
-            event.error ("No post data");
+            event.error ("Invalid post data");
         }
     }
 }

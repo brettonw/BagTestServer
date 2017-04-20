@@ -13,6 +13,9 @@ import static org.junit.Assert.assertTrue;
 public class TestServer_Test extends TestServer {
     private static final Logger log = LogManager.getLogger (TestServer_Test.class);
 
+    public static final String ECHO = "echo";
+    public static final String HEADERS = "headers";
+
     ServletTester servletTester;
 
     public TestServer_Test () {

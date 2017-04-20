@@ -6,10 +6,6 @@
             "description": "Return the build version for the current WAR.",
             "example": {}
         },
-        "help": {
-            "description": "Get the API description.",
-            "example": {}
-        },
         "ok": {
             "description": "Ok.",
             "example": {}
