@@ -1,3 +1,8 @@
+# DEPRECATED
+
+BagTestServer is now Bedrock (https://github.com/brettonw/Bedrock)
+
+
 ## Description
 
 Bag Test Server is a simple JSON repeater designed to be part of the test suite for com.brettonw.bag.
